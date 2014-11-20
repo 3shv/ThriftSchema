@@ -1,0 +1,4 @@
+Run with the following commands to start java thrift server.
+1. mvn package
+2. mvn exec:java
+
