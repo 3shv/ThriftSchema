@@ -17,7 +17,11 @@ var connection = thrift.createConnection(JAVA_SERVER_ADDRESS,JAVA_SERVER_PORT, {
 
 connection.on('error', function(err) {
 	  err.stack;
+	  console.error("Unable to connect to java thrift server");
 	  //assert(false, err);
+});
+connection.on('connect', function() {
+	   console.error("Connection established");
 });
 
 var client = thrift.createClient(StoreService, connection);
@@ -35,17 +39,32 @@ console.log("... Starting server at port "+LISTENER_PORT+"...")
 app.listen(LISTENER_PORT);
 
 var send = function (req) {
-	console.log("Parsing data "+req);
 	var json = {};
 	try {
-	  json = JSON.stringify(req);
+	  json = JSON.parse(req);
 	}catch(err) {
 		err.stack;
+		console.log("Error while parsing "+req);
 	 }
-	var user = new user_types.User(json);
+	var userVar = new user_types.User(json);
+	//if(user!=null) console.log(user);
+	var client;
+	if(connection != null || connection != undefined) client = thrift.createClient(StoreService, connection);
+	if(client != undefined || client != null) {
+		console.log(userVar);
+		client.store(userVar, function(err,response) {
+			if(err) {
+				console.error(err);
+			}
+			else {
+				console.log("Save successful");
+			}
+		});
+	}
 }
 
 var repeat = setInterval(function() {
-	var string = "{ name: 'veer' , email: 'user@email.com' , comment: 'This is a test' , id: 1}"
+	// JSON requires double quotes //
+	var string = '{ "name": "veer" , "email": "user@email.com" , "comment": "This is a test" , "id": 1}';
 	send(string);
 },1000);
