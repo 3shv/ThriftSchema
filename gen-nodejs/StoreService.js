@@ -8,7 +8,7 @@ var Thrift = require('thrift').Thrift;
 var ttypes = require('./user_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
-user.StoreService_store_args = function(args) {
+StoreService_store_args = function(args) {
   this.user = null;
   if (args) {
     if (args.user !== undefined) {
@@ -16,8 +16,8 @@ user.StoreService_store_args = function(args) {
     }
   }
 };
-user.StoreService_store_args.prototype = {};
-user.StoreService_store_args.prototype.read = function(input) {
+StoreService_store_args.prototype = {};
+StoreService_store_args.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -50,7 +50,7 @@ user.StoreService_store_args.prototype.read = function(input) {
   return;
 };
 
-user.StoreService_store_args.prototype.write = function(output) {
+StoreService_store_args.prototype.write = function(output) {
   output.writeStructBegin('StoreService_store_args');
   if (this.user !== null && this.user !== undefined) {
     output.writeFieldBegin('user', Thrift.Type.STRUCT, 1);
@@ -62,7 +62,7 @@ user.StoreService_store_args.prototype.write = function(output) {
   return;
 };
 
-user.StoreService_store_result = function(args) {
+StoreService_store_result = function(args) {
   this.success = null;
   this.err = null;
   if (args instanceof ttypes.InvalidData) {
@@ -78,8 +78,8 @@ user.StoreService_store_result = function(args) {
     }
   }
 };
-user.StoreService_store_result.prototype = {};
-user.StoreService_store_result.prototype.read = function(input) {
+StoreService_store_result.prototype = {};
+StoreService_store_result.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -116,7 +116,7 @@ user.StoreService_store_result.prototype.read = function(input) {
   return;
 };
 
-user.StoreService_store_result.prototype.write = function(output) {
+StoreService_store_result.prototype.write = function(output) {
   output.writeStructBegin('StoreService_store_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.I32, 0);
@@ -133,30 +133,30 @@ user.StoreService_store_result.prototype.write = function(output) {
   return;
 };
 
-user.StoreServiceClient = exports.Client = function(output, pClass) {
+StoreServiceClient = exports.Client = function(output, pClass) {
     this.output = output;
     this.pClass = pClass;
     this.seqid = 0;
     this._reqs = {};
 };
-user.StoreServiceClient.prototype = {};
-user.StoreServiceClient.prototype.store = function(user, callback) {
+StoreServiceClient.prototype = {};
+StoreServiceClient.prototype.store = function(user, callback) {
   this.seqid += 1;
   this._reqs[this.seqid] = callback;
   this.send_store(user);
 };
 
-user.StoreServiceClient.prototype.send_store = function(user) {
+StoreServiceClient.prototype.send_store = function(user) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('store', Thrift.MessageType.CALL, this.seqid);
-  var args = new user.StoreService_store_args();
+  var args = new StoreService_store_args();
   args.user = user;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
 };
 
-user.StoreServiceClient.prototype.recv_store = function(input,mtype,rseqid) {
+StoreServiceClient.prototype.recv_store = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -165,7 +165,7 @@ user.StoreServiceClient.prototype.recv_store = function(input,mtype,rseqid) {
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new user.StoreService_store_result();
+  var result = new StoreService_store_result();
   result.read(input);
   input.readMessageEnd();
 
@@ -177,10 +177,10 @@ user.StoreServiceClient.prototype.recv_store = function(input,mtype,rseqid) {
   }
   return callback('store failed: unknown result');
 };
-user.StoreServiceProcessor = exports.Processor = function(handler) {
+StoreServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler
 }
-user.StoreServiceProcessor.prototype.process = function(input, output) {
+StoreServiceProcessor.prototype.process = function(input, output) {
   var r = input.readMessageBegin();
   if (this['process_' + r.fname]) {
     return this['process_' + r.fname].call(this, r.rseqid, input, output);
@@ -195,12 +195,12 @@ user.StoreServiceProcessor.prototype.process = function(input, output) {
   }
 }
 
-user.StoreServiceProcessor.prototype.process_store = function(seqid, input, output) {
-  var args = new user.StoreService_store_args();
+StoreServiceProcessor.prototype.process_store = function(seqid, input, output) {
+  var args = new StoreService_store_args();
   args.read(input);
   input.readMessageEnd();
   this._handler.store(args.user, function (err, result) {
-    var result = new user.StoreService_store_result((err != null ? err : {success: result}));
+    var result = new StoreService_store_result((err != null ? err : {success: result}));
     output.writeMessageBegin("store", Thrift.MessageType.REPLY, seqid);
     result.write(output);
     output.writeMessageEnd();

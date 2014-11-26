@@ -1,4 +1,4 @@
-namespace * user
+namespace java user
 
 typedef i32 int
 

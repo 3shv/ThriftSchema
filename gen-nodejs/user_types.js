@@ -6,10 +6,7 @@
 var Thrift = require('thrift').Thrift;
 
 var ttypes = module.exports = {};
-if (typeof user === 'undefined') {
-  user = {};
-}
-user.User = module.exports.User = function(args) {
+User = module.exports.User = function(args) {
   this.name = null;
   this.email = null;
   this.comment = null;
@@ -29,8 +26,8 @@ user.User = module.exports.User = function(args) {
     }
   }
 };
-user.User.prototype = {};
-user.User.prototype.read = function(input) {
+User.prototype = {};
+User.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -80,7 +77,7 @@ user.User.prototype.read = function(input) {
   return;
 };
 
-user.User.prototype.write = function(output) {
+User.prototype.write = function(output) {
   output.writeStructBegin('User');
   if (this.name !== null && this.name !== undefined) {
     output.writeFieldBegin('name', Thrift.Type.STRING, 1);
@@ -107,9 +104,9 @@ user.User.prototype.write = function(output) {
   return;
 };
 
-user.InvalidData = module.exports.InvalidData = function(args) {
-  Thrift.TException.call(this, "user.InvalidData")
-  this.name = "user.InvalidData"
+InvalidData = module.exports.InvalidData = function(args) {
+  Thrift.TException.call(this, "InvalidData")
+  this.name = "InvalidData"
   this.code = null;
   this.reason = null;
   if (args) {
@@ -121,9 +118,9 @@ user.InvalidData = module.exports.InvalidData = function(args) {
     }
   }
 };
-Thrift.inherits(user.InvalidData, Thrift.TException);
-user.InvalidData.prototype.name = 'InvalidData';
-user.InvalidData.prototype.read = function(input) {
+Thrift.inherits(InvalidData, Thrift.TException);
+InvalidData.prototype.name = 'InvalidData';
+InvalidData.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -159,7 +156,7 @@ user.InvalidData.prototype.read = function(input) {
   return;
 };
 
-user.InvalidData.prototype.write = function(output) {
+InvalidData.prototype.write = function(output) {
   output.writeStructBegin('InvalidData');
   if (this.code !== null && this.code !== undefined) {
     output.writeFieldBegin('code', Thrift.Type.I32, 1);
